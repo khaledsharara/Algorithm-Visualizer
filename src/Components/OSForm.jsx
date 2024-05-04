@@ -92,12 +92,25 @@ const OSForm = () => {
       n--;
     } while (n > 1);
   };
-
   const SelectionSort = async () => {
-    for (let i = 0; i < array.length; i++) {
-      if (array[0] > array[i]) {
-        let min = array[i];
-        console.log(min);
+    let arr = [...array];
+    let n = arr.length;
+
+    for (let i = 0; i < n - 1; i++) {
+      let minIndex = i;
+      for (let j = i + 1; j < n; j++) {
+        setHighlightedIndexes([minIndex, j]);
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
+
+        if (arr[j] < arr[minIndex]) {
+          minIndex = j;
+        }
+      }
+      if (minIndex !== i) {
+        let temp = arr[i];
+        arr[i] = arr[minIndex];
+        arr[minIndex] = temp;
+        setArray([...arr]);
       }
     }
   };
@@ -182,7 +195,7 @@ const OSForm = () => {
               </button>
             </div> */}
 
-            <div className="flex flex-row mt-10 h-10">
+            <div className="flex flex-row mt-20 h-10">
               {buttonPressed &&
                 array.length > 0 &&
                 array.map((term, index) => (
@@ -206,9 +219,13 @@ const OSForm = () => {
                   </div>
                 ))}
             </div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white my-auto">
-              Position: {position}
-            </label>
+            {buttonPressed &&
+              position != null &&
+              (algorithm === "LS" || algorithm === "BS") && (
+                <label class="block mb-2 mt-10 text-m font-medium text-gray-900 dark:text-white my-auto">
+                  Position: {position}
+                </label>
+              )}
           </form>
         </div>
       </div>
