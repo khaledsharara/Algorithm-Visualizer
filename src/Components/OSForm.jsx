@@ -3,25 +3,101 @@ import { useEffect, useState } from "react";
 
 const OSForm = () => {
   const [algorithm, setAlgorithm] = useState("");
-  const [arrayString, setArrayString] = useState();
+  const [arrayString, setArrayString] = useState("");
   const [array, setArray] = useState([]);
   const [search, setSearch] = useState("");
   const [buttonPressed, setButtonPressed] = useState(false);
-  const [position, setPosition] = useState(0);
+  const [position, setPosition] = useState();
+  const [highlightedIndex, setHighlightedIndex] = useState(null);
+  const [highlightedIndexes, setHighlightedIndexes] = useState([]);
+  const [sortedArray, setSortedArray] = useState([]);
+
+  useEffect(() => {
+    if (algorithm === "LS" && buttonPressed) {
+      LinearSearch();
+    } else if (algorithm === "BS" && buttonPressed) {
+      BinarySearch();
+    } else if (algorithm === "BBS" && buttonPressed) {
+      BubbleSort();
+    } else if (algorithm === "SS" && buttonPressed) {
+      SelectionSort();
+    }
+  }, [buttonPressed]);
 
   const handleSubmit = async () => {
     setButtonPressed(true);
-    setArray(arrayString.split(","));
-
-    if (algorithm == "LS") {
-      LinearSearch();
-    }
+    let tempArray = arrayString.split(",").map(function (item) {
+      return parseInt(item, 10);
+    });
+    setArray(tempArray);
   };
 
   const LinearSearch = async () => {
     for (let i = 0; i < array.length; i++) {
-      if (search == array[i]) {
+      setHighlightedIndex(i);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (search === array[i]) {
         setPosition(i + 1);
+        setHighlightedIndex(null);
+        return;
+      }
+    }
+    setPosition(0); // If not found, set position to 0
+    setHighlightedIndex(null); // Clear highlight
+  };
+
+  const BinarySearch = async () => {
+    array.sort(function (a, b) {
+      return a - b;
+    });
+    let low = 0;
+    let high = array.length - 1;
+
+    while (low <= high) {
+      let mid = Math.floor((low + high) / 2);
+      setHighlightedIndex(mid);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (array[mid] === search) {
+        setPosition(mid + 1);
+        setHighlightedIndex(null);
+        return;
+      } else if (array[mid] < search) {
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+
+    setPosition(0);
+    setHighlightedIndex(null);
+  };
+
+  const BubbleSort = async () => {
+    let arr = [...array];
+    let n = arr.length;
+    console.log(n, "is n");
+    do {
+      for (let i = 0; i < n - 1; i++) {
+        setHighlightedIndexes([i, i + 1]);
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
+        console.log("Now comparing", arr[i], "and", arr[i + 1]);
+        if (arr[i] > arr[i + 1]) {
+          console.log(arr[i], "is bigger than", arr[i + 1]);
+          let temp = arr[i];
+          arr[i] = arr[i + 1];
+          arr[i + 1] = temp;
+          setArray([...arr]);
+        }
+      }
+      n--;
+    } while (n > 1);
+  };
+
+  const SelectionSort = async () => {
+    for (let i = 0; i < array.length; i++) {
+      if (array[0] > array[i]) {
+        let min = array[i];
+        console.log(min);
       }
     }
   };
@@ -69,7 +145,7 @@ const OSForm = () => {
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Search for"
                       value={search}
-                      onChange={(e) => setSearch(e.target.value)}
+                      onChange={(e) => setSearch(Number(e.target.value))}
                       // onKeyDown={handleKeyDown}
                       required
                     />
@@ -109,20 +185,26 @@ const OSForm = () => {
             <div className="flex flex-row mt-10 h-10">
               {buttonPressed &&
                 array.length > 0 &&
-                array.map((term, index) => {
-                  return (
-                    <div
-                      className={`${
-                        index % 2 == 0 ? "bg-slate-500" : "bg-slate-600"
-                      }`}
-                      style={{
-                        width: `${(1 / array.length) * 100}%`,
-                      }}
-                    >
-                      <p className="">{term}</p>
-                    </div>
-                  );
-                })}
+                array.map((term, index) => (
+                  <div
+                    key={index}
+                    className={`${
+                      index === position - 1
+                        ? "bg-green-500"
+                        : index === highlightedIndex ||
+                          highlightedIndexes.includes(index)
+                        ? "bg-blue-500"
+                        : index % 2 === 0
+                        ? "bg-slate-500"
+                        : "bg-slate-600"
+                    }`}
+                    style={{
+                      width: `${(1 / array.length) * 100}%`,
+                    }}
+                  >
+                    <p className="">{term}</p>
+                  </div>
+                ))}
             </div>
             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white my-auto">
               Position: {position}
