@@ -229,8 +229,8 @@ const OSForm = () => {
                       index === position - 1
                         ? "bg-green-500"
                         : index === highlightedIndex ||
-                          highlightedIndexes.includes(index)
-                        ? "bg-blue-500"
+                          highlightedIndexes?.includes(index)
+                        ? "bg-blue-500 border-x border-slate-800"
                         : index % 2 === 0
                         ? "bg-slate-500"
                         : "bg-slate-600"
