@@ -46,7 +46,7 @@ const OSForm = () => {
   const LinearSearch = async () => {
     for (let i = 0; i < array.length; i++) {
       setHighlightedIndex(i);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 650));
       if (search === array[i]) {
         setPosition(i + 1);
         setHighlightedIndex(null);
@@ -67,7 +67,7 @@ const OSForm = () => {
     while (low <= high) {
       let mid = Math.floor((low + high) / 2);
       setHighlightedIndex(mid);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 650));
       if (array[mid] === search) {
         setPosition(mid + 1);
         setHighlightedIndex(null);
@@ -89,7 +89,7 @@ const OSForm = () => {
     do {
       for (let i = 0; i < n - 1; i++) {
         setHighlightedIndexes([i, i + 1]);
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
+        await new Promise((resolve) => setTimeout(resolve, 650)); 
         console.log("Now comparing", arr[i], "and", arr[i + 1]);
         if (arr[i] > arr[i + 1]) {
           console.log(arr[i], "is bigger than", arr[i + 1]);
@@ -111,7 +111,7 @@ const OSForm = () => {
       let minIndex = i;
       for (let j = i + 1; j < n; j++) {
         setHighlightedIndexes([minIndex, j]);
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
+        await new Promise((resolve) => setTimeout(resolve, 650)); 
 
         if (arr[j] < arr[minIndex]) {
           minIndex = j;
@@ -218,31 +218,31 @@ const OSForm = () => {
                 Play
               </button>
             </div>
+            <div className="flex flex-row mt-20 h-16">
+  {buttonPressed &&
+    array.length > 0 &&
+    array.map((term, index) => (
+      <div
+        key={index}
+        className={`${
+          index === position - 1
+            ? "bg-green-500"
+            : index === highlightedIndex ||
+              highlightedIndexes?.includes(index)
+            ? "bg-blue-500 border-x border-slate-800"
+            : index % 2 === 0
+            ? "bg-slate-500"
+            : "bg-slate-600"
+        } flex justify-center items-center`} 
+        style={{
+          width: `${(1 / array.length) * 100}%`,
+        }}
+      >
+        <p className="font-semibold text-lg">{term}</p>
+      </div>
+    ))}
+</div>
 
-            <div className="flex flex-row mt-20 h-10">
-              {buttonPressed &&
-                array.length > 0 &&
-                array.map((term, index) => (
-                  <div
-                    key={index}
-                    className={`${
-                      index === position - 1
-                        ? "bg-green-500"
-                        : index === highlightedIndex ||
-                          highlightedIndexes?.includes(index)
-                        ? "bg-blue-500 border-x border-slate-800"
-                        : index % 2 === 0
-                        ? "bg-slate-500"
-                        : "bg-slate-600"
-                    }`}
-                    style={{
-                      width: `${(1 / array.length) * 100}%`,
-                    }}
-                  >
-                    <p className="">{term}</p>
-                  </div>
-                ))}
-            </div>
             {buttonPressed &&
               position != null && error === false &&
               (algorithm === "LS" || algorithm === "BS") && (
