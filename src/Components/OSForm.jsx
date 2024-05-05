@@ -51,10 +51,10 @@ const OSForm = () => {
       if (search === array[i]) {
         setPosition(i + 1);
         setHighlightedIndex(null);
-        setSteps(prevSteps => prevSteps + 1);
+        setSteps((prevSteps) => prevSteps + 1);
         return;
-      } else { 
-        setSteps(prevSteps => prevSteps + 1);
+      } else {
+        setSteps((prevSteps) => prevSteps + 1);
       }
     }
     setError(true);
@@ -75,14 +75,14 @@ const OSForm = () => {
       if (array[mid] === search) {
         setPosition(mid + 1);
         setHighlightedIndex(null);
-        setSteps(prevSteps => prevSteps + 1);
+        setSteps((prevSteps) => prevSteps + 1);
         return;
       } else if (array[mid] < search) {
         low = mid + 1;
-        setSteps(prevSteps => prevSteps + 1);
+        setSteps((prevSteps) => prevSteps + 1);
       } else {
         high = mid - 1;
-        setSteps(prevSteps => prevSteps + 1);
+        setSteps((prevSteps) => prevSteps + 1);
       }
     }
     setError(true);
@@ -95,8 +95,8 @@ const OSForm = () => {
     do {
       for (let i = 0; i < n - 1; i++) {
         setHighlightedIndexes([i, i + 1]);
-        await new Promise((resolve) => setTimeout(resolve, 650)); 
-        setSteps(prevSteps => prevSteps + 1);
+        await new Promise((resolve) => setTimeout(resolve, 650));
+        setSteps((prevSteps) => prevSteps + 1);
         if (arr[i] > arr[i + 1]) {
           let temp = arr[i];
           arr[i] = arr[i + 1];
@@ -116,8 +116,8 @@ const OSForm = () => {
       let minIndex = i;
       for (let j = i + 1; j < n; j++) {
         setHighlightedIndexes([minIndex, j]);
-        await new Promise((resolve) => setTimeout(resolve, 650)); 
-        setSteps(prevSteps => prevSteps + 1);
+        await new Promise((resolve) => setTimeout(resolve, 650));
+        setSteps((prevSteps) => prevSteps + 1);
 
         if (arr[j] < arr[minIndex]) {
           minIndex = j;
@@ -161,11 +161,9 @@ const OSForm = () => {
           className="w-full max-w-3/4"
           style={{ display: "flex", justifyContent: "center" }}
         >
-          <form
-            // onSubmit={handleSubmit}
-            className="new-item-form"
-          >
+          <form className="new-item-form">
             <div className="form-row">
+              {/* User input */}
               <div className="mb-6">
                 <div
                   className={`grid gap-4 ${
@@ -215,6 +213,7 @@ const OSForm = () => {
                 </div>
               </div>
             </div>
+            {/* Buttons */}
             <div className="flex justify-end">
               <button
                 type="button"
@@ -232,63 +231,73 @@ const OSForm = () => {
                 Play
               </button>
             </div>
+            {/* Input error handling */}
+            <div>
+              {inputError === true && (
+                <label className="block mb-10 mt-5 text-m font-medium text-red-500 dark:text-red-500 my-auto">
+                  Please enter correct input
+                </label>
+              )}
+            </div>
+            {/* GUI grid with animation */}
             <div className="flex flex-row mt-20 h-16">
-  {buttonPressed &&
-    array.length > 0 &&
-    array.map((term, index) => (
-      <div
-        key={index}
-        className={`${
-          index === position - 1
-            ? "bg-green-500"
-            : index === highlightedIndex ||
-              highlightedIndexes?.includes(index)
-            ? "bg-blue-500 border-x border-slate-800"
-            : index % 2 === 0
-            ? "bg-slate-500"
-            : "bg-slate-600"
-        } flex justify-center items-center`} 
-        style={{
-          width: `${(1 / array.length) * 100}%`,
-        }}
-      >
-        <p className="font-semibold text-lg">{term}</p>
-      </div>
-    ))}
-</div>
-
-          {buttonPressed && 
-          <label className="block mb-2 mt-10 text-m font-medium text-gray-900 dark:text-white my-auto">
-          Steps: {steps}
-          </label>}
-
-          {buttonPressed && 
-          <label className="block mb-2 mt-4 text-m font-medium text-gray-900 dark:text-white my-auto">
-          Running Time: {steps * 650}ms
-          </label>}
-
-            {buttonPressed &&
-              position != null &&
-              error === false &&
-              (algorithm === "LS" || algorithm === "BS") && (
+              {buttonPressed &&
+                array.length > 0 &&
+                array.map((term, index) => (
+                  <div
+                    key={index}
+                    className={`${
+                      index === position - 1
+                        ? "bg-green-500"
+                        : index === highlightedIndex ||
+                          highlightedIndexes?.includes(index)
+                        ? "bg-blue-500 border-x border-slate-800"
+                        : index % 2 === 0
+                        ? "bg-slate-500"
+                        : "bg-slate-600"
+                    } flex justify-center items-center`}
+                    style={{
+                      width: `${(1 / array.length) * 100}%`,
+                    }}
+                  >
+                    <p className="font-semibold text-lg">{term}</p>
+                  </div>
+                ))}
+            </div>
+            {/* Information about the process */}
+            <div>
+              {buttonPressed && (
+                <label className="block mb-2 mt-10 text-m font-medium text-gray-900 dark:text-white my-auto">
+                  Steps: {steps}
+                </label>
+              )}
+              {buttonPressed && (
                 <label className="block mb-2 mt-4 text-m font-medium text-gray-900 dark:text-white my-auto">
-                  Position: <label className="text-m font-medium text-green-500 dark:text-green-500 ">
-                   {position}
-                </label>
+                  Running Time: {steps * 650}ms
                 </label>
               )}
-            {buttonPressed &&
-              error === true &&
-              (algorithm === "LS" || algorithm === "BS") && (
-                <label className="block mb-2 mt-10 text-m font-medium text-red-500 dark:text-red-500 my-auto">
-                  The term does not exist in the array
-                </label>
-              )}
-            {inputError === true && (
-              <label className="block mb-2 mt-10 text-m font-medium text-red-500 dark:text-red-500 my-auto">
-                Please enter correct input
-              </label>
-            )}
+              {buttonPressed &&
+                position != null &&
+                error === false &&
+                (algorithm === "LS" || algorithm === "BS") && (
+                  <label className="block mb-2 mt-4 text-m font-medium text-gray-900 dark:text-white my-auto">
+                    Position:{" "}
+                    <label className="text-m font-medium text-green-500 dark:text-green-500 ">
+                      {position}
+                    </label>
+                  </label>
+                )}
+            </div>
+            {/* Term not found error */}
+            <div>
+              {buttonPressed &&
+                error === true &&
+                (algorithm === "LS" || algorithm === "BS") && (
+                  <label className="block mb-2 mt-10 text-m font-medium text-red-500 dark:text-red-500 my-auto">
+                    The term does not exist in the array
+                  </label>
+                )}
+            </div>
           </form>
         </div>
       </div>
