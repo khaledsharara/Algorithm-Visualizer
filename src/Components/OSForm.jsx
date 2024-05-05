@@ -28,7 +28,7 @@ const OSForm = () => {
   }, [buttonPressed]);
 
   const handleSubmit = async () => {
-    console.log(algorithm);
+    setSearch(Number(search));
     let tempArray = arrayString.split(",").map(function (item) {
       return parseInt(item.trim(), 10);
     });
@@ -47,8 +47,9 @@ const OSForm = () => {
       setInputError(true);
       return;
     }
+
     setInputError(false);
-    setArray(tempArray);
+    setArray(tempArray.map(Number)); // Convert each item to a number
     setButtonPressed(true);
   };
 
@@ -218,7 +219,7 @@ const OSForm = () => {
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Search for"
                       value={search}
-                      onChange={(e) => setSearch(Number(e.target.value))}
+                      onChange={(e) => setSearch(e.target.value)}
                       onKeyDown={handleKeyDown}
                       required
                     />
