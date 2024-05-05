@@ -1,25 +1,14 @@
-# Gantt Chart Visualizer
+# Algorithm Visualizer
 
-A Gantt chart stands as a practical cornerstone in project management, offering a
-straightforward visual representation of task schedules over time. When delving into CPU scheduling
-algorithms, the Gantt chart assumes a pivotal role in elucidating the execution timeline of processes.
-Algorithms, such as the commonly used Round Robin or Shortest Job First, dictate the order in which
-processes are granted CPU time.
-This visual tool, in the form of a Gantt chart, simplifies the complex task of understanding the
-scheduling intricacies, facilitating an easy-to-interpret display. It becomes an invaluable aid in analyzing
-resource utilization, turnaround times, and the overall efficiency of a computing system. In the
-development of our web application, ReactJS was employed—a web app framework utilizing JavaScript,
-HTML, and CSS. Additionally, TailWindCSS was leveraged to enhance and streamline the application's
-styling.
+The Algorithm Visualizer is a web-based tool designed to help users understand and visualize sorting and searching algorithms. Through a user-friendly interface, users can input an array of numbers and select an algorithm to observe its execution step by step. The application supports popular algorithms such as Linear Search, Binary Search, Bubble Sort, and Selection Sort.
 
-Navigating through our web app is designed to be user-friendly and intuitive. Users input
-individual processes, including arrival time, priority, and burst time, which are then displayed in a
-comprehensive table. Once all processes are entered, users can select a scheduling algorithm and click
-"Generate" to witness the Gantt chart dynamically organized by the chosen algorithm. Additionally, the
-average turnaround time and waiting time are presented below the Gantt chart, providing a
-comprehensive overview of the scheduled processes.
+## Features
 
-An interactive demo can be viewed [here](https://gcv-eight.vercel.app/).
+- **Algorithm Selection:** Choose from a variety of algorithms including Linear Search, Binary Search, Bubble Sort, and Selection Sort.
+- **Input Validation:** Validate user input to ensure that only numeric values are entered in the array and search fields.
+- **Step-by-Step Visualization:** Visualize each algorithm's execution step by step to understand its inner workings.
+- **Error Handling:** Informative error messages guide users in case of invalid input or errors during execution.
+- **Responsive Design:** Optimized for viewing experience across devices.
 
 ## Available Scripts
 
