@@ -28,13 +28,13 @@ const OSForm = () => {
   const handleSubmit = async () => {
     let tempArray = arrayString.split(",").map(function (item) {
       return parseInt(item.trim(), 10);
-});
-  
+    });
+
     if (tempArray.some(isNaN)) {
       setInputError(true);
       return;
     }
-  
+
     if ((algorithm === "LS" || algorithm === "BS") && isNaN(search)) {
       setInputError(true);
       return;
@@ -55,7 +55,7 @@ const OSForm = () => {
     }
     setError(true);
     setHighlightedIndex(null);
- };
+  };
 
   const BinarySearch = async () => {
     array.sort(function (a, b) {
@@ -89,7 +89,7 @@ const OSForm = () => {
     do {
       for (let i = 0; i < n - 1; i++) {
         setHighlightedIndexes([i, i + 1]);
-        await new Promise((resolve) => setTimeout(resolve, 650)); 
+        await new Promise((resolve) => setTimeout(resolve, 650));
         console.log("Now comparing", arr[i], "and", arr[i + 1]);
         if (arr[i] > arr[i + 1]) {
           console.log(arr[i], "is bigger than", arr[i + 1]);
@@ -111,7 +111,7 @@ const OSForm = () => {
       let minIndex = i;
       for (let j = i + 1; j < n; j++) {
         setHighlightedIndexes([minIndex, j]);
-        await new Promise((resolve) => setTimeout(resolve, 650)); 
+        await new Promise((resolve) => setTimeout(resolve, 650));
 
         if (arr[j] < arr[minIndex]) {
           minIndex = j;
@@ -139,19 +139,21 @@ const OSForm = () => {
     setError(false);
     setInputError(false);
   };
-  
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      handleSubmit(); 
+      handleSubmit();
     }
   };
-  
 
   return (
     <>
-<div className="bg-slate-800 pt-5 min-h-screen max-h-full flex justify-content-center">
-  <div className="w-full max-w-3/4" style={{ display: "flex", justifyContent: "center" }}>
+      <div className="bg-slate-800 pt-5 min-h-screen max-h-full flex justify-content-center">
+        <div
+          className="w-full max-w-3/4"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
           <form
             // onSubmit={handleSubmit}
             className="new-item-form"
@@ -159,7 +161,11 @@ const OSForm = () => {
             <div className="form-row">
               <div className="mb-6">
                 <div
-                className={`grid gap-4 ${(algorithm === "LS" || algorithm === "BS")? "grid-cols-4": "grid-cols-3"}`}
+                  className={`grid gap-4 ${
+                    algorithm === "LS" || algorithm === "BS"
+                      ? "grid-cols-4"
+                      : "grid-cols-3"
+                  }`}
                 >
                   <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white my-auto">
                     Choose Algorithm:
@@ -187,7 +193,7 @@ const OSForm = () => {
                     onKeyDown={handleKeyDown}
                     required
                   />
-                  {(algorithm == "LS" || algorithm == "BS") && (
+                  {(algorithm === "LS" || algorithm === "BS") && (
                     <input
                       type="text"
                       id="processes"
@@ -220,44 +226,50 @@ const OSForm = () => {
               </button>
             </div>
             <div className="flex flex-row mt-20 h-16">
-  {buttonPressed &&
-    array.length > 0 &&
-    array.map((term, index) => (
-      <div
-        key={index}
-        className={`${
-          index === position - 1
-            ? "bg-green-500"
-            : index === highlightedIndex ||
-              highlightedIndexes?.includes(index)
-            ? "bg-blue-500 border-x border-slate-800"
-            : index % 2 === 0
-            ? "bg-slate-500"
-            : "bg-slate-600"
-        } flex justify-center items-center`} 
-        style={{
-          width: `${(1 / array.length) * 100}%`,
-        }}
-      >
-        <p className="font-semibold text-lg">{term}</p>
-      </div>
-    ))}
-</div>
+              {buttonPressed &&
+                array.length > 0 &&
+                array.map((term, index) => (
+                  <div
+                    key={index}
+                    className={`${
+                      index === position - 1
+                        ? "bg-green-500"
+                        : index === highlightedIndex ||
+                          highlightedIndexes?.includes(index)
+                        ? "bg-blue-500 border-x border-slate-800"
+                        : index % 2 === 0
+                        ? "bg-slate-500"
+                        : "bg-slate-600"
+                    } flex justify-center items-center`}
+                    style={{
+                      width: `${(1 / array.length) * 100}%`,
+                    }}
+                  >
+                    <p className="font-semibold text-lg">{term}</p>
+                  </div>
+                ))}
+            </div>
 
             {buttonPressed &&
-              position != null && error === false &&
+              position != null &&
+              error === false &&
               (algorithm === "LS" || algorithm === "BS") && (
                 <label className="block mb-2 mt-10 text-m font-medium text-gray-900 dark:text-white my-auto">
                   Position: {position}
                 </label>
               )}
-              {buttonPressed  && error === true &&
-              (algorithm === "LS" || algorithm === "BS") && <label className="block mb-2 mt-10 text-m font-medium text-red-500 dark:text-red-500 my-auto">
-              The term does not exist in the array
-            </label> }
-            {inputError === true && <label className="block mb-2 mt-10 text-m font-medium text-red-500 dark:text-red-500 my-auto">
-              Please enter correct input
-            </label> }
+            {buttonPressed &&
+              error === true &&
+              (algorithm === "LS" || algorithm === "BS") && (
+                <label className="block mb-2 mt-10 text-m font-medium text-red-500 dark:text-red-500 my-auto">
+                  The term does not exist in the array
+                </label>
+              )}
+            {inputError === true && (
+              <label className="block mb-2 mt-10 text-m font-medium text-red-500 dark:text-red-500 my-auto">
+                Please enter correct input
+              </label>
+            )}
           </form>
         </div>
       </div>
