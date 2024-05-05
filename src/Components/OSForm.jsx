@@ -12,6 +12,7 @@ const OSForm = () => {
   const [highlightedIndexes, setHighlightedIndexes] = useState([]);
   const [error, setError] = useState(false);
   const [inputError, setInputError] = useState(false);
+  const [steps, setSteps] = useState(0);
 
   useEffect(() => {
     if (algorithm === "LS" && buttonPressed) {
@@ -50,7 +51,10 @@ const OSForm = () => {
       if (search === array[i]) {
         setPosition(i + 1);
         setHighlightedIndex(null);
+        setSteps(prevSteps => prevSteps + 1);
         return;
+      } else { 
+        setSteps(prevSteps => prevSteps + 1);
       }
     }
     setError(true);
@@ -71,11 +75,14 @@ const OSForm = () => {
       if (array[mid] === search) {
         setPosition(mid + 1);
         setHighlightedIndex(null);
+        setSteps(prevSteps => prevSteps + 1);
         return;
       } else if (array[mid] < search) {
         low = mid + 1;
+        setSteps(prevSteps => prevSteps + 1);
       } else {
         high = mid - 1;
+        setSteps(prevSteps => prevSteps + 1);
       }
     }
     setError(true);
@@ -85,14 +92,12 @@ const OSForm = () => {
   const BubbleSort = async () => {
     let arr = [...array];
     let n = arr.length;
-    console.log(n, "is n");
     do {
       for (let i = 0; i < n - 1; i++) {
         setHighlightedIndexes([i, i + 1]);
         await new Promise((resolve) => setTimeout(resolve, 650)); 
-        console.log("Now comparing", arr[i], "and", arr[i + 1]);
+        setSteps(prevSteps => prevSteps + 1);
         if (arr[i] > arr[i + 1]) {
-          console.log(arr[i], "is bigger than", arr[i + 1]);
           let temp = arr[i];
           arr[i] = arr[i + 1];
           arr[i + 1] = temp;
@@ -112,6 +117,7 @@ const OSForm = () => {
       for (let j = i + 1; j < n; j++) {
         setHighlightedIndexes([minIndex, j]);
         await new Promise((resolve) => setTimeout(resolve, 650)); 
+        setSteps(prevSteps => prevSteps + 1);
 
         if (arr[j] < arr[minIndex]) {
           minIndex = j;
@@ -138,6 +144,7 @@ const OSForm = () => {
     setHighlightedIndexes([]);
     setError(false);
     setInputError(false);
+    setSteps(0);
   };
   
   const handleKeyDown = (e) => {
@@ -244,11 +251,23 @@ const OSForm = () => {
     ))}
 </div>
 
+          {buttonPressed && 
+          <label className="block mb-2 mt-10 text-m font-medium text-gray-900 dark:text-white my-auto">
+          Steps: {steps}
+          </label>}
+
+          {buttonPressed && 
+          <label className="block mb-2 mt-4 text-m font-medium text-gray-900 dark:text-white my-auto">
+          Running Time: {steps * 650}ms
+          </label>}
+
             {buttonPressed &&
               position != null && error === false &&
               (algorithm === "LS" || algorithm === "BS") && (
-                <label className="block mb-2 mt-10 text-m font-medium text-gray-900 dark:text-white my-auto">
-                  Position: {position}
+                <label className="block mb-2 mt-4 text-m font-medium text-gray-900 dark:text-white my-auto">
+                  Position: <label className="text-m font-medium text-green-500 dark:text-green-500 ">
+                   {position}
+                </label>
                 </label>
               )}
               {buttonPressed  && error === true &&
