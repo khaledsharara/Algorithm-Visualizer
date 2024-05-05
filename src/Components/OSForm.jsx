@@ -10,6 +10,8 @@ const OSForm = () => {
   const [position, setPosition] = useState();
   const [highlightedIndex, setHighlightedIndex] = useState(null);
   const [highlightedIndexes, setHighlightedIndexes] = useState([]);
+  const [error, setError] = useState(false);
+  const [inputError, setInputError] = useState(false);
 
   useEffect(() => {
     if (algorithm === "LS" && buttonPressed) {
@@ -24,11 +26,21 @@ const OSForm = () => {
   }, [buttonPressed]);
 
   const handleSubmit = async () => {
-    setButtonPressed(true);
     let tempArray = arrayString.split(",").map(function (item) {
-      return parseInt(item, 10);
-    });
+      return parseInt(item.trim(), 10);
+});
+  
+    if (tempArray.some(isNaN)) {
+      setInputError(true);
+      return;
+    }
+  
+    if ((algorithm === "LS" || algorithm === "BS") && isNaN(search)) {
+      setInputError(true);
+      return;
+    }
     setArray(tempArray);
+    setButtonPressed(true);
   };
 
   const LinearSearch = async () => {
@@ -41,9 +53,9 @@ const OSForm = () => {
         return;
       }
     }
-    setPosition(0); // If not found, set position to 0
-    setHighlightedIndex(null); // Clear highlight
-  };
+    setError(true);
+    setHighlightedIndex(null);
+ };
 
   const BinarySearch = async () => {
     array.sort(function (a, b) {
@@ -66,8 +78,7 @@ const OSForm = () => {
         high = mid - 1;
       }
     }
-
-    setPosition(0);
+    setError(true);
     setHighlightedIndex(null);
   };
 
@@ -116,6 +127,27 @@ const OSForm = () => {
     setHighlightedIndexes(null);
   };
 
+  const handleReset = () => {
+    setAlgorithm("");
+    setArrayString("");
+    setArray([]);
+    setSearch("");
+    setButtonPressed(false);
+    setPosition(null);
+    setHighlightedIndex(null);
+    setHighlightedIndexes([]);
+    setError(false);
+    setInputError(false);
+  };
+  
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSubmit(); 
+    }
+  };
+  
+
   return (
     <>
 <div className="bg-slate-800 pt-5 min-h-screen max-h-full flex justify-content-center">
@@ -149,9 +181,10 @@ const OSForm = () => {
                     type="text"
                     id="processes"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Array"
+                    placeholder="Comma separated array"
                     value={arrayString}
                     onChange={(e) => setArrayString(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     required
                   />
                   {(algorithm == "LS" || algorithm == "BS") && (
@@ -162,7 +195,7 @@ const OSForm = () => {
                       placeholder="Search for"
                       value={search}
                       onChange={(e) => setSearch(Number(e.target.value))}
-                      // onKeyDown={handleKeyDown}
+                      onKeyDown={handleKeyDown}
                       required
                     />
                   )}
@@ -173,7 +206,7 @@ const OSForm = () => {
               <button
                 type="button"
                 className="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
-                // onClick={handleReset}
+                onClick={handleReset}
               >
                 Reset
               </button>
@@ -182,7 +215,7 @@ const OSForm = () => {
                 className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
                 onClick={handleSubmit}
               >
-                Add
+                Play
               </button>
             </div>
 
@@ -211,12 +244,19 @@ const OSForm = () => {
                 ))}
             </div>
             {buttonPressed &&
-              position != null &&
+              position != null && error === false &&
               (algorithm === "LS" || algorithm === "BS") && (
                 <label className="block mb-2 mt-10 text-m font-medium text-gray-900 dark:text-white my-auto">
                   Position: {position}
                 </label>
               )}
+              {buttonPressed  && error === true &&
+              (algorithm === "LS" || algorithm === "BS") && <label className="block mb-2 mt-10 text-m font-medium text-red-500 dark:text-red-500 my-auto">
+              The term does not exist in the array
+            </label> }
+            {inputError === true && <label className="block mb-2 mt-10 text-m font-medium text-red-500 dark:text-red-500 my-auto">
+              Please enter correct input
+            </label> }
           </form>
         </div>
       </div>
