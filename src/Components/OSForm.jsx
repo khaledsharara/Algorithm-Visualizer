@@ -29,13 +29,13 @@ const OSForm = () => {
   const handleSubmit = async () => {
     let tempArray = arrayString.split(",").map(function (item) {
       return parseInt(item.trim(), 10);
-});
-  
+    });
+
     if (tempArray.some(isNaN)) {
       setInputError(true);
       return;
     }
-  
+
     if ((algorithm === "LS" || algorithm === "BS") && isNaN(search)) {
       setInputError(true);
       return;
@@ -59,7 +59,7 @@ const OSForm = () => {
     }
     setError(true);
     setHighlightedIndex(null);
- };
+  };
 
   const BinarySearch = async () => {
     array.sort(function (a, b) {
@@ -146,19 +146,21 @@ const OSForm = () => {
     setInputError(false);
     setSteps(0);
   };
-  
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      handleSubmit(); 
+      handleSubmit();
     }
   };
-  
 
   return (
     <>
-<div className="bg-slate-800 pt-5 min-h-screen max-h-full flex justify-content-center">
-  <div className="w-full max-w-3/4" style={{ display: "flex", justifyContent: "center" }}>
+      <div className="bg-slate-800 pt-5 min-h-screen max-h-full flex justify-content-center">
+        <div
+          className="w-full max-w-3/4"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
           <form
             // onSubmit={handleSubmit}
             className="new-item-form"
@@ -166,7 +168,11 @@ const OSForm = () => {
             <div className="form-row">
               <div className="mb-6">
                 <div
-                className={`grid gap-4 ${(algorithm === "LS" || algorithm === "BS")? "grid-cols-4": "grid-cols-3"}`}
+                  className={`grid gap-4 ${
+                    algorithm === "LS" || algorithm === "BS"
+                      ? "grid-cols-4"
+                      : "grid-cols-3"
+                  }`}
                 >
                   <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white my-auto">
                     Choose Algorithm:
@@ -194,7 +200,7 @@ const OSForm = () => {
                     onKeyDown={handleKeyDown}
                     required
                   />
-                  {(algorithm == "LS" || algorithm == "BS") && (
+                  {(algorithm === "LS" || algorithm === "BS") && (
                     <input
                       type="text"
                       id="processes"
@@ -262,7 +268,8 @@ const OSForm = () => {
           </label>}
 
             {buttonPressed &&
-              position != null && error === false &&
+              position != null &&
+              error === false &&
               (algorithm === "LS" || algorithm === "BS") && (
                 <label className="block mb-2 mt-4 text-m font-medium text-gray-900 dark:text-white my-auto">
                   Position: <label className="text-m font-medium text-green-500 dark:text-green-500 ">
@@ -270,13 +277,18 @@ const OSForm = () => {
                 </label>
                 </label>
               )}
-              {buttonPressed  && error === true &&
-              (algorithm === "LS" || algorithm === "BS") && <label className="block mb-2 mt-10 text-m font-medium text-red-500 dark:text-red-500 my-auto">
-              The term does not exist in the array
-            </label> }
-            {inputError === true && <label className="block mb-2 mt-10 text-m font-medium text-red-500 dark:text-red-500 my-auto">
-              Please enter correct input
-            </label> }
+            {buttonPressed &&
+              error === true &&
+              (algorithm === "LS" || algorithm === "BS") && (
+                <label className="block mb-2 mt-10 text-m font-medium text-red-500 dark:text-red-500 my-auto">
+                  The term does not exist in the array
+                </label>
+              )}
+            {inputError === true && (
+              <label className="block mb-2 mt-10 text-m font-medium text-red-500 dark:text-red-500 my-auto">
+                Please enter correct input
+              </label>
+            )}
           </form>
         </div>
       </div>
