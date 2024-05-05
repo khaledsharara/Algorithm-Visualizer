@@ -12,6 +12,8 @@ const OSForm = () => {
   const [highlightedIndexes, setHighlightedIndexes] = useState([]);
   const [error, setError] = useState(false);
   const [inputError, setInputError] = useState(false);
+  const [steps, setSteps] = useState(0);
+  const [processDone, setProcessDone] = useState(false);
 
   useEffect(() => {
     if (algorithm === "LS" && buttonPressed) {
@@ -26,6 +28,7 @@ const OSForm = () => {
   }, [buttonPressed]);
 
   const handleSubmit = async () => {
+    console.log(algorithm);
     let tempArray = arrayString.split(",").map(function (item) {
       return parseInt(item.trim(), 10);
     });
@@ -39,6 +42,12 @@ const OSForm = () => {
       setInputError(true);
       return;
     }
+
+    if (!algorithm) {
+      setInputError(true);
+      return;
+    }
+    setInputError(false);
     setArray(tempArray);
     setButtonPressed(true);
   };
@@ -51,6 +60,7 @@ const OSForm = () => {
         setPosition(i + 1);
         setHighlightedIndex(null);
         setSteps((prevSteps) => prevSteps + 1);
+        setProcessDone(true);
         return;
       } else {
         setSteps((prevSteps) => prevSteps + 1);
@@ -75,6 +85,7 @@ const OSForm = () => {
         setPosition(mid + 1);
         setHighlightedIndex(null);
         setSteps((prevSteps) => prevSteps + 1);
+        setProcessDone(true);
         return;
       } else if (array[mid] < search) {
         low = mid + 1;
@@ -91,14 +102,12 @@ const OSForm = () => {
   const BubbleSort = async () => {
     let arr = [...array];
     let n = arr.length;
-    console.log(n, "is n");
     do {
       for (let i = 0; i < n - 1; i++) {
         setHighlightedIndexes([i, i + 1]);
         await new Promise((resolve) => setTimeout(resolve, 650));
         setSteps((prevSteps) => prevSteps + 1);
         if (arr[i] > arr[i + 1]) {
-          console.log(arr[i], "is bigger than", arr[i + 1]);
           let temp = arr[i];
           arr[i] = arr[i + 1];
           arr[i + 1] = temp;
@@ -107,6 +116,7 @@ const OSForm = () => {
       }
       n--;
     } while (n > 1);
+    setProcessDone(true);
     setHighlightedIndexes(null);
   };
   const SelectionSort = async () => {
@@ -131,6 +141,7 @@ const OSForm = () => {
         setArray([...arr]);
       }
     }
+    setProcessDone(true);
     setHighlightedIndexes(null);
   };
 
@@ -145,6 +156,8 @@ const OSForm = () => {
     setHighlightedIndexes([]);
     setError(false);
     setInputError(false);
+    setSteps(0);
+    setProcessDone(false);
   };
 
   const handleKeyDown = (e) => {
@@ -298,6 +311,116 @@ const OSForm = () => {
                   </label>
                 )}
             </div>
+            {/* Information about the algorithm */}
+            {processDone && (
+              <section class="bg-white dark:bg-gray-900">
+                <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+                  <div class="max-w-screen-lg text-gray-500 sm:text-lg dark:text-gray-400">
+                    <h2 class="mb-4 text-4xl tracking-tight font-bold text-gray-900 dark:text-white">
+                      {algorithm === "LS" && `Linear Search`}
+                      {algorithm === "BS" && `Binary Search`}
+                      {algorithm === "BBS" && `Bubble Sort`}
+                      {algorithm === "SS" && `Selection Sort`}
+                    </h2>
+                    {algorithm === "LS" && (
+                      <p class="mb-4 font-light">
+                        Linear search is a simple searching algorithm that
+                        sequentially checks each element in a list until the
+                        target element is found or the end of the list is
+                        reached. It starts from the beginning and compares each
+                        element with the target until a match is found. Linear
+                        search is easy to implement and works well with small
+                        datasets. However, its time complexity is O(n), making
+                        it inefficient for large datasets compared to other
+                        search algorithms like binary search. Linear search is
+                        often used when the list is unordered or when the
+                        dataset is small. It is commonly implemented in
+                        languages like C, Java, and Python for basic search
+                        operations.
+                      </p>
+                    )}
+                    {algorithm === "BS" && (
+                      <p class="mb-4 font-light">
+                        Binary search is a highly efficient searching algorithm
+                        used to find the position of a target value within a
+                        sorted array or list. It works by repeatedly dividing
+                        the search interval in half until the target element is
+                        found or the interval is empty. Binary search requires
+                        the list to be sorted beforehand, which allows it to
+                        quickly narrow down the search space. With a time
+                        complexity of O(log n), binary search is significantly
+                        faster than linear search for large datasets. It's
+                        commonly used in computer science and software
+                        development for tasks like searching in databases and
+                        maintaining sorted collections. However, it may not be
+                        suitable for unsorted data or data that frequently
+                        changes its order.
+                      </p>
+                    )}
+                    {algorithm === "BBS" && (
+                      <p class="mb-4 font-light">
+                        Bubble sort is a simple sorting algorithm that
+                        repeatedly steps through the list, compares adjacent
+                        elements, and swaps them if they are in the wrong order.
+                        It gets its name because smaller elements "bubble" to
+                        the top of the list with each pass. Bubble sort has a
+                        time complexity of O(n<sup>2</sup>), making it
+                        inefficient for large datasets, but it's easy to
+                        understand and implement. Despite its inefficiency,
+                        bubble sort can be useful for teaching purposes or for
+                        sorting small datasets where simplicity is preferred
+                        over speed. However, it's rarely used in practice due to
+                        its poor performance compared to more efficient sorting
+                        algorithms like quicksort or mergesort.
+                      </p>
+                    )}
+                    {algorithm === "SS" && (
+                      <p class="mb-4 font-light">
+                        Selection sort is a sorting algorithm that divides the
+                        input list into two parts: the sorted sublist and the
+                        unsorted sublist. It repeatedly finds the minimum
+                        element from the unsorted sublist and swaps it with the
+                        first unsorted element, thereby growing the sorted
+                        sublist. Selection sort has a time complexity of O(n
+                        <sup>2</sup>) as it involves nested loops to find the
+                        minimum element. Despite its inefficiency for large
+                        datasets, selection sort can be practical for small
+                        lists or as a building block for more complex sorting
+                        algorithms.
+                      </p>
+                    )}
+                    <a
+                      href={
+                        algorithm === "LS"
+                          ? "https://www.geeksforgeeks.org/linear-search/"
+                          : algorithm === "BS"
+                          ? "https://www.geeksforgeeks.org/binary-search/"
+                          : algorithm === "BBS"
+                          ? "https://www.geeksforgeeks.org/bubble-sort/"
+                          : algorithm === "SS"
+                          ? "https://www.geeksforgeeks.org/selection-sort/"
+                          : ""
+                      }
+                      class="inline-flex items-center font-medium text-primary-600 hover:text-primary-800 dark:text-primary-500 dark:hover:text-primary-700"
+                    >
+                      Learn more
+                      <svg
+                        class="ml-1 w-6 h-6"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </section>
+            )}
           </form>
         </div>
       </div>
