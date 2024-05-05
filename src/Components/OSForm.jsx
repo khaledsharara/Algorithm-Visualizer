@@ -12,7 +12,6 @@ const OSForm = () => {
   const [highlightedIndexes, setHighlightedIndexes] = useState([]);
   const [error, setError] = useState(false);
   const [inputError, setInputError] = useState(false);
-  const [steps, setSteps] = useState(0);
 
   useEffect(() => {
     if (algorithm === "LS" && buttonPressed) {
@@ -92,12 +91,14 @@ const OSForm = () => {
   const BubbleSort = async () => {
     let arr = [...array];
     let n = arr.length;
+    console.log(n, "is n");
     do {
       for (let i = 0; i < n - 1; i++) {
         setHighlightedIndexes([i, i + 1]);
         await new Promise((resolve) => setTimeout(resolve, 650));
         setSteps((prevSteps) => prevSteps + 1);
         if (arr[i] > arr[i + 1]) {
+          console.log(arr[i], "is bigger than", arr[i + 1]);
           let temp = arr[i];
           arr[i] = arr[i + 1];
           arr[i + 1] = temp;
@@ -144,7 +145,6 @@ const OSForm = () => {
     setHighlightedIndexes([]);
     setError(false);
     setInputError(false);
-    setSteps(0);
   };
 
   const handleKeyDown = (e) => {
